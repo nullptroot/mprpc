@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package fixbug;
+
+option cc_generic_services = true;
+
+message KeyValuePair
+{
+  int32 key = 1;
+  bytes value = 2;
+}
+
+message ResultCode {
+  int32 errcode = 1;
+  bytes errmsg = 2;
+}
+
+message SearchOrDeleteRequest {
+  int32 key = 1;
+}
+
+message SearchResponse {
+  ResultCode result = 1;
+  KeyValuePair kvPair = 2;
+}
+
+
+message InsertRequest {
+  KeyValuePair kvPair = 1;
+}
+
+
+message ShowAllResponse
+{
+  ResultCode result = 1;
+  repeated KeyValuePair allKvPair = 2;
+}
+
+
+service KVServerRPC {
+  rpc InsertKeyValue(InsertRequest) returns(ResultCode);
+  rpc SearchKeyValue(SearchOrDeleteRequest) returns(SearchResponse);
+  rpc DeleteKeyValue(SearchOrDeleteRequest) returns(ResultCode);
+  rpc ShowAllKeyValue(google.protobuf.Empty) returns(ShowAllResponse);
+}
